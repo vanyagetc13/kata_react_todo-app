@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import Footer from './components/footer'
 import NewTaskForm from './components/new-task-form'
 import TodoList from './components/todo-list'
@@ -101,15 +102,12 @@ class App extends Component {
   }
   showFilteredTasks = () => {
     let filter
-    switch (this.state.currentFilter) {
-      case 'Completed':
-        filter = 'completed'
-        break
-      case 'Active':
-        filter = 'active'
-        break
-      default:
-        return this.state.data
+    if (this.state.currentFilter === 'Active') {
+      filter = 'active'
+    } else if (this.state.currentFilter === 'Completed') {
+      filter = 'completed'
+    } else {
+      return this.state.data
     }
     return this.state.data.filter((task) => task.status === filter)
   }
