@@ -1,28 +1,24 @@
-import React from 'react';
+import React from 'react'
 
 class TasksFilters extends React.Component {
-  static defaultProps = {
-    currFilter: '',
-    changeFilter: () => {},
-  };
   static propTypes = {
     currFilter: (props, propName, componentName) => {
-      const value = props[propName];
-      if (typeof value === 'string') return null;
-      return new TypeError(`${propName} in ${componentName} must be a string`);
+      const value = props[propName]
+      if (typeof value === 'string') return null
+      return new TypeError(`${propName} in ${componentName} must be a string`)
     },
     changeFilter: (props, propName, componentName) => {
-      const value = props[propName];
-      if (typeof value === 'function') return null;
-      return new TypeError(`${propName} in ${componentName} must be a function`);
+      const value = props[propName]
+      if (typeof value === 'function') return null
+      return new TypeError(`${propName} in ${componentName} must be a function`)
     },
-  };
+  }
   render() {
-    const { currFilter, changeFilter } = this.props;
-    const checkFilter = (str) => (str === currFilter ? 'selected' : '');
+    const { currFilter, changeFilter } = this.props
+    const checkFilter = (str) => (str === currFilter ? 'selected' : '')
     const handler = (newFilter) => {
-      changeFilter(newFilter);
-    };
+      changeFilter(newFilter)
+    }
     return (
       <ul className="filters">
         <li>
@@ -30,7 +26,7 @@ class TasksFilters extends React.Component {
             className={checkFilter('All')}
             onClick={() => {
               // handler('All')
-              changeFilter('All');
+              changeFilter('All')
             }}
           >
             All
@@ -40,7 +36,7 @@ class TasksFilters extends React.Component {
           <button
             className={checkFilter('Active')}
             onClick={() => {
-              handler('Active');
+              handler('Active')
             }}
           >
             Active
@@ -50,15 +46,19 @@ class TasksFilters extends React.Component {
           <button
             className={checkFilter('Completed')}
             onClick={() => {
-              handler('Completed');
+              handler('Completed')
             }}
           >
             Completed
           </button>
         </li>
       </ul>
-    );
+    )
   }
 }
 
-export default TasksFilters;
+TasksFilters.defaultProps = {
+  currFilter: '',
+  changeFilter: () => {},
+}
+export default TasksFilters
