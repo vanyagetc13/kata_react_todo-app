@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TasksFilters from './filters-panel'
+import TasksFilters from './filters-panel';
 
 class Footer extends React.Component {
   render() {
@@ -16,4 +16,4 @@ class Footer extends React.Component {
   }
 }
 
-export default Footer
+export default Footer;

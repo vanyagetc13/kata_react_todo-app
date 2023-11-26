@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Task from './todo-task'
+import Task from './todo-task';
 
 const TodoList = ({ data, deleteTaskHandler, changeTaskDescription, setEditingStatus, toggleStatus }) => {
   return (
@@ -17,6 +17,6 @@ const TodoList = ({ data, deleteTaskHandler, changeTaskDescription, setEditingSt
       ))}
     </ul>
   );
-}
+};
 
-export default TodoList
+export default TodoList;
