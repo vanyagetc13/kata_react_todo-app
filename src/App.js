@@ -13,19 +13,22 @@ class App extends Component {
           description: 'Completed task',
           created: new Date(new Date() - 10000),
           status: 'completed',
+          timer: 0,
           id: 0,
         },
         {
           description: 'Editing task',
           created: new Date(new Date() - 1200000),
           status: 'active',
-          isEditing: true,
+          isEditing: false,
+          timer: 0,
           id: 1,
         },
         {
           description: 'Active task',
           created: new Date(new Date() - 240000),
           status: 'active',
+          timer: 0,
           id: 2,
         },
       ],
@@ -34,11 +37,12 @@ class App extends Component {
     }
   }
 
-  addNewTask = (todoDescription) => {
+  addNewTask = (todoDescription, minutes, seconds) => {
     const newTask = {
       description: todoDescription,
       created: new Date(),
       status: 'active',
+      timer: minutes * 60 + seconds,
       id: this.state.lastId + 1,
     }
     const newData = [...this.state.data, newTask]

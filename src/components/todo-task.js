@@ -10,7 +10,12 @@ class Task extends React.Component {
   state = {
     newValue: this.props.taskData.description,
     timeAgo: this.getTimeAgo(),
+    timer: {
+      playing: false,
+      amount: this.props.taskData.timer,
+    },
   }
+  interval = null
   deleteHandler = () => {
     this.props.deleteTaskHandler(this.props.taskData.id)
   }
@@ -22,10 +27,56 @@ class Task extends React.Component {
     if (this.props.taskData.isEditing) return 'editing'
     else return this.props.taskData.status
   }
-  render() {
+  taskStatusToggle = () => {
+    this.props.toggleStatus(this.props.taskData.id)
+  }
+
+  componentDidMount() {
+    // this.playTimer() // ?
     setInterval(() => {
-      this.setState({ ...this.state, timeAgo: this.getTimeAgo() })
+      this.setState((prev) => ({
+        ...prev,
+        timeAgo: this.getTimeAgo(),
+      }))
     }, 1000)
+  }
+
+  playTimer = () => {
+    this.interval = setInterval(() => {
+      if (this.state.timer.amount > 0)
+        this.setState((prev) => ({
+          ...prev,
+          timer: {
+            ...this.state.timer,
+            amount: this.state.timer.amount - 1,
+          },
+        }))
+    }, 1000)
+  }
+
+  pauseTimer = () => {
+    if (this.interval) clearInterval(this.interval)
+    this.interval = null
+  }
+
+  render() {
+    const playHandler = (e) => {
+      e.stopPropagation()
+      this.playTimer()
+    }
+    const pauseHandler = (e) => {
+      e.stopPropagation()
+      this.pauseTimer()
+    }
+    const getMinutesAndSeconds = (seconds) => {
+      let minutes = 0
+      if (seconds >= 60) {
+        minutes = Math.floor(seconds / 60)
+        seconds = seconds - minutes * 60
+      }
+      return { minutes, seconds }
+    }
+    const { minutes, seconds } = getMinutesAndSeconds(this.state.timer.amount)
     return (
       <li className={this.checkClass()}>
         <div className="view">
@@ -33,15 +84,17 @@ class Task extends React.Component {
             className="toggle"
             type="checkbox"
             checked={this.props.taskData.status === 'completed'}
+            onChange={this.taskStatusToggle}
             // Если имелось ввиду такая работа данного инпута
           />
-          <label
-            onClick={() => {
-              this.props.toggleStatus(this.props.taskData.id)
-            }}
-          >
-            <span className="description">{this.props.taskData.description}</span>
-            <span className="created">created {this.getTimeAgo()} ago</span>
+          <label onClick={this.taskStatusToggle}>
+            <span className="title">{this.props.taskData.description}</span>
+            <span className="description">
+              <button className="icon icon-play" onClick={playHandler} />
+              <button className="icon icon-pause" onClick={pauseHandler} />
+              <span style={{ marginLeft: 5 }}>{minutes + ':' + seconds}</span>
+            </span>
+            <span className="description">created {this.state.timeAgo} ago</span>
           </label>
           <button
             className="icon icon-edit"
@@ -51,7 +104,7 @@ class Task extends React.Component {
           ></button>
           <button className="icon icon-destroy" onClick={this.deleteHandler}></button>
         </div>
-        {this.props.taskData.isEditing && (
+        {this.props.taskData?.isEditing && (
           <input
             type="text"
             className="edit"
