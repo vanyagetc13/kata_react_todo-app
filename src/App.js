@@ -53,7 +53,6 @@ class App extends Component {
     })
   }
   toggleStatus = (id) => {
-    console.log('toggling status', id)
     const taskId = this.state.data.findIndex((task) => task.id === id)
     const task = this.state.data[taskId]
     const newData = this.state.data

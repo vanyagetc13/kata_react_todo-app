@@ -15,10 +15,14 @@ export default class NewTaskForm extends Component {
   // }
 
   render() {
-    const handler = (e) => {
+    const createTaskHandler = (e) => {
       e.preventDefault()
-      const minutes = this.state.todoMinutes < 0 || this.state.todoMinutes === '' ? 0 : Number(this.state.todoMinutes)
-      const seconds = this.state.todoSeconds >= 60 || this.state.todoSeconds === '' ? 0 : Number(this.state.todoSeconds)
+      const minutes = this.state.todoMinutes === '' ? 0 : Number(this.state.todoMinutes)
+      const seconds = this.state.todoSeconds === '' ? 0 : Number(this.state.todoSeconds)
+      if (minutes === 0 && seconds === 0) {
+        this.setState((prev) => ({ ...prev, error: 'Set the timer (timer can not be 0)' }))
+        return
+      }
       if (this.state.todoDescription.trim() !== '')
         this.props.addNewTaskHandler(this.state.todoDescription.trim(), minutes, seconds)
       this.setState({ ...this.state, todoDescription: '', todoMinutes: '', todoSeconds: '' })
@@ -40,15 +44,13 @@ export default class NewTaskForm extends Component {
       })
     }
     return (
-      <form onSubmit={handler} className="new-todo-form">
+      <form onSubmit={createTaskHandler} className="new-todo-form">
+        {this.state.error && <span className="error">{this.state.error}</span>}
         <input
           className="new-todo"
           placeholder="What needs to be done?"
           autoFocus
           value={this.state.todoDescription}
-          // ref={input => {
-          // 	this.inputRef = input
-          // }}
           onChange={(e) => {
             const newValue = e.currentTarget.value
             this.setState({ ...this.state, todoDescription: newValue })
@@ -57,6 +59,7 @@ export default class NewTaskForm extends Component {
         <input
           className="new-todo-form__timer"
           placeholder="Min"
+          min={0}
           type="number"
           value={this.state.todoMinutes}
           onChange={minutesChangeHandler}
@@ -65,6 +68,7 @@ export default class NewTaskForm extends Component {
           className="new-todo-form__timer"
           placeholder="Sec"
           type="number"
+          max={59}
           value={this.state.todoSeconds}
           onChange={secondsChangeHandler}
         />

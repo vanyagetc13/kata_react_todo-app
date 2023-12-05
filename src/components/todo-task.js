@@ -28,11 +28,11 @@ class Task extends React.Component {
     else return this.props.taskData.status
   }
   taskStatusToggle = () => {
+    this.pauseTimer()
     this.props.toggleStatus(this.props.taskData.id)
   }
 
   componentDidMount() {
-    // this.playTimer() // ?
     setInterval(() => {
       this.setState((prev) => ({
         ...prev,
@@ -41,21 +41,32 @@ class Task extends React.Component {
     }, 1000)
   }
 
+  componentWillUnmount() {
+    this.pauseTimer()
+  }
+
   playTimer = () => {
-    this.interval = setInterval(() => {
-      if (this.state.timer.amount > 0)
-        this.setState((prev) => ({
-          ...prev,
-          timer: {
-            ...this.state.timer,
-            amount: this.state.timer.amount - 1,
-          },
-        }))
-    }, 1000)
+    if (this.interval) {
+      this.pauseTimer()
+    }
+    if (this.state.timer.amount > 0)
+      this.interval = setInterval(() => {
+        if (this.state.timer.amount > 0)
+          this.setState((prev) => ({
+            ...prev,
+            timer: {
+              ...this.state.timer,
+              amount: this.state.timer.amount - 1,
+            },
+          }))
+        else {
+          this.pauseTimer()
+        }
+      }, 1000)
   }
 
   pauseTimer = () => {
-    if (this.interval) clearInterval(this.interval)
+    if (this.interval !== null) clearInterval(this.interval)
     this.interval = null
   }
 
@@ -85,15 +96,21 @@ class Task extends React.Component {
             type="checkbox"
             checked={this.props.taskData.status === 'completed'}
             onChange={this.taskStatusToggle}
-            // Если имелось ввиду такая работа данного инпута
           />
-          <label onClick={this.taskStatusToggle}>
+          <label
+            onClick={(e) => {
+              e.preventDefault()
+              this.taskStatusToggle()
+            }}
+          >
             <span className="title">{this.props.taskData.description}</span>
-            <span className="description">
-              <button className="icon icon-play" onClick={playHandler} />
-              <button className="icon icon-pause" onClick={pauseHandler} />
-              <span style={{ marginLeft: 5 }}>{minutes + ':' + seconds}</span>
-            </span>
+            {this.props.taskData.status !== 'completed' && (
+              <span className="description">
+                <button className="icon icon-play" onClick={playHandler} />
+                <button className="icon icon-pause" onClick={pauseHandler} />
+                <span style={{ marginLeft: 5 }}>{minutes + ':' + seconds}</span>
+              </span>
+            )}
             <span className="description">created {this.state.timeAgo} ago</span>
           </label>
           <button

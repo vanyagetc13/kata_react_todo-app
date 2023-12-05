@@ -87,6 +87,15 @@ body {
 .new-todo-form {
 	display: flex;
 	margin-bottom: 0;
+	position: relative;
+}
+
+.new-todo-form > .error {
+	position: absolute;
+	bottom: 0;
+	left: 60px;
+	color: #af5b5e;
+	font-size: 11px;	
 }
 
 .new-todo-form input[type="number"]::-webkit-inner-spin-button,
