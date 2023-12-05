@@ -68,6 +68,7 @@ export default class NewTaskForm extends Component {
           className="new-todo-form__timer"
           placeholder="Sec"
           type="number"
+          min={0}
           max={59}
           value={this.state.todoSeconds}
           onChange={secondsChangeHandler}
