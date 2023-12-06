@@ -10,10 +10,6 @@ class Task extends React.Component {
   state = {
     newValue: this.props.taskData.description,
     timeAgo: this.getTimeAgo(),
-    timer: {
-      playing: false,
-      amount: this.props.taskData.timer,
-    },
   }
   interval = null
   deleteHandler = () => {
@@ -49,17 +45,13 @@ class Task extends React.Component {
     if (this.interval) {
       this.pauseTimer()
     }
-    if (this.state.timer.amount > 0)
+    if (this.props.taskData.timer > 0)
       this.interval = setInterval(() => {
-        if (this.state.timer.amount > 0)
-          this.setState((prev) => ({
-            ...prev,
-            timer: {
-              ...this.state.timer,
-              amount: this.state.timer.amount - 1,
-            },
-          }))
-        else {
+        const amount = this.props.taskData.timer
+        console.log('tick', this.props.taskData.timer)
+        if (amount > 0) {
+          this.props.changeTaskTimerByID(this.props.taskData.id, amount - 1)
+        } else {
           this.pauseTimer()
         }
       }, 1000)
@@ -87,7 +79,7 @@ class Task extends React.Component {
       }
       return { minutes, seconds }
     }
-    const { minutes, seconds } = getMinutesAndSeconds(this.state.timer.amount)
+    const { minutes, seconds } = getMinutesAndSeconds(this.props.taskData.timer)
     return (
       <li className={this.checkClass()}>
         <div className="view">

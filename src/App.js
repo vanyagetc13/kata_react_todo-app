@@ -52,6 +52,21 @@ class App extends Component {
       lastId: this.state.lastId + 1,
     })
   }
+
+  changeTaskTimerByID = (id, newTimer) => {
+    console.log(newTimer)
+    this.setState((prev) => {
+      const newData = [...this.state.data]
+      const taskID = newData.findIndex((task) => task.id === id)
+      const newTask = { ...newData[taskID], timer: newTimer }
+      newData.splice(taskID, 1, newTask)
+      return {
+        ...prev,
+        data: newData,
+      }
+    })
+  }
+
   toggleStatus = (id) => {
     const taskId = this.state.data.findIndex((task) => task.id === id)
     const task = this.state.data[taskId]
@@ -128,6 +143,7 @@ class App extends Component {
             changeTaskDescription={this.changeTaskDescription}
             setEditingStatus={this.setEditingStatus}
             toggleStatus={this.toggleStatus}
+            changeTaskTimerByID={this.changeTaskTimerByID}
           />
           <Footer
             currFilter={this.state.currentFilter}

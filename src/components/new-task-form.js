@@ -7,27 +7,21 @@ export default class NewTaskForm extends Component {
     todoSeconds: '',
   }
   inputRef = null
-  // constructor(){
-  // 	super()
-  // 	this.state = {
-  // 		todoDescription: ''
-  // 	}
-  // }
+
+  createTaskHandler = (e) => {
+    e.preventDefault()
+    const minutes = this.state.todoMinutes === '' ? 0 : Number(this.state.todoMinutes)
+    const seconds = this.state.todoSeconds === '' ? 0 : Number(this.state.todoSeconds)
+    if (minutes === 0 && seconds === 0) {
+      this.setState((prev) => ({ ...prev, error: 'Set the timer (timer can not be 0)' }))
+      return
+    }
+    if (this.state.todoDescription.trim() !== '')
+      this.props.addNewTaskHandler(this.state.todoDescription.trim(), minutes, seconds)
+    this.setState((prev) => ({ ...prev, todoDescription: '', todoMinutes: '', todoSeconds: '', error: null }))
+  }
 
   render() {
-    const createTaskHandler = (e) => {
-      e.preventDefault()
-      const minutes = this.state.todoMinutes === '' ? 0 : Number(this.state.todoMinutes)
-      const seconds = this.state.todoSeconds === '' ? 0 : Number(this.state.todoSeconds)
-      if (minutes === 0 && seconds === 0) {
-        this.setState((prev) => ({ ...prev, error: 'Set the timer (timer can not be 0)' }))
-        return
-      }
-      if (this.state.todoDescription.trim() !== '')
-        this.props.addNewTaskHandler(this.state.todoDescription.trim(), minutes, seconds)
-      this.setState({ ...this.state, todoDescription: '', todoMinutes: '', todoSeconds: '' })
-      // if (this.inputRef) this.inputRef.focus()
-    }
     const minutesChangeHandler = (e) => {
       const value = e.target.value
       this.setState({
@@ -44,7 +38,7 @@ export default class NewTaskForm extends Component {
       })
     }
     return (
-      <form onSubmit={createTaskHandler} className="new-todo-form">
+      <form onSubmit={this.createTaskHandler} className="new-todo-form">
         {this.state.error && <span className="error">{this.state.error}</span>}
         <input
           className="new-todo"
