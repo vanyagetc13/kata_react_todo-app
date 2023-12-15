@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Footer from './components/footer'
 import NewTaskForm from './components/new-task-form'
-import TodoList from './components/todo-list'
+import TodoList from './components/TodoList'
 
 const initialData = [
 	{
@@ -100,8 +100,48 @@ function App() {
 		}, 0)
 	}
 
-	const setTodoInterval = () => {} // Дописать
-	const deleteTodoInterval = () => {} // Дописать
+	const changeTimerInterval = (id, interval) => {
+		setData((prev) => {
+			const newData = [...prev]
+			const taskID = newData.findIndex((task) => task.id === id)
+			const newTask = { ...newData[taskID], timerInterval: interval }
+			newData.splice(taskID, 1, newTask)
+			return newData
+		})
+	}
+
+	const changeTaskTimerByID = (id, newTimer) => {
+		setData((prev) => {
+			const newData = [...prev]
+			const taskID = newData.findIndex((task) => task.id === id)
+			const newTask = { ...newData[taskID], timer: newTimer }
+			newData.splice(taskID, 1, newTask)
+			return newData
+		})
+	}
+
+	const setTodoInterval = (id) => {
+		const taskData = data.find((todo) => todo.id === id)
+		if (!taskData) return
+		if (taskData.timerInterval) deleteTodoInterval(id)
+		if (taskData.timer <= 0) return
+		const interval = setInterval(() => {
+			const taskData = data.find((todo) => todo.id === id)
+			const amount = taskData.timer
+			if (amount > 0) {
+				changeTaskTimerByID(taskData.id, amount - 1)
+			} else {
+				deleteTodoInterval(id)
+			}
+		}, 1000)
+		changeTimerInterval(taskData.id, interval)
+	}
+	const deleteTodoInterval = (id) => {
+		const taskData = data.find((todo) => todo.id === id)
+		if (!taskData) return
+		if (taskData.timerInterval !== null) clearInterval(taskData.timerInterval)
+		changeTimerInterval(taskData.id, null)
+	}
 
 	return (
 		<section className="todoapp">

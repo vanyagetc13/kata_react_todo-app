@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Footer from './components/footer'
 import NewTaskForm from './components/new-task-form'
-import TodoList from './components/todo-list'
+import TodoList from './components/TodoList'
 
 class App extends Component {
 	constructor() {
@@ -71,7 +71,7 @@ class App extends Component {
 	setTodoInterval = (id) => {
 		const taskData = this.state.data.find((todo) => todo.id === id)
 		if (!taskData) return
-		if (taskData.timerInterval) this.pauseTimer()
+		if (taskData.timerInterval) this.deleteTodoInterval(id)
 		if (taskData.timer <= 0) return
 		const interval = setInterval(() => {
 			const taskData = this.state.data.find((todo) => todo.id === id)
@@ -80,7 +80,7 @@ class App extends Component {
 			if (amount > 0) {
 				this.changeTaskTimerByID(taskData.id, amount - 1)
 			} else {
-				this.deleteTodoInterval()
+				this.deleteTodoInterval(id)
 			}
 		}, 1000)
 		this.changeTimerInterval(taskData.id, interval)
