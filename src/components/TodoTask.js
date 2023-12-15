@@ -12,7 +12,7 @@ const TodoTask = ({
 }) => {
 	const [intervalID, setIntervalID] = useState(null)
 	const [newValue, setNewValue] = useState(taskData.description)
-	const [timeAgo, setTimeAgo] = useState(getTimeAgo())
+	const [timeAgo, setTimeAgo] = useState(null)
 
 	const getTimeAgo = () => {
 		return formatDistanceToNow(taskData.created, {
@@ -89,7 +89,7 @@ const TodoTask = ({
 							<span style={{ marginLeft: 5 }}>{minutes + ':' + seconds}</span>
 						</span>
 					)}
-					<span className="description">created {timeAgo} ago</span>
+					<span className="description">created {timeAgo || 'loading...'} ago</span>
 				</label>
 				<button
 					className="icon icon-edit"

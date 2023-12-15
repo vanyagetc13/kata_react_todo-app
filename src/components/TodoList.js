@@ -1,5 +1,5 @@
 import React from 'react'
-import Task from './todo-task'
+import Task from './TodoTask'
 
 const TodoList = ({
 	data,

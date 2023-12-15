@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Footer from './components/footer'
-import NewTaskForm from './components/new-task-form'
+import NewTaskForm from './components/NewTaskForm'
 import TodoList from './components/TodoList'
 
 const initialData = [
